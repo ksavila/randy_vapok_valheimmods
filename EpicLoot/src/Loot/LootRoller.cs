@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using Common;
 using EpicLoot.Adventure;
+using EpicLoot.Biome;
 using EpicLoot.Config;
 using EpicLoot.Crafting;
 using EpicLoot.Data;
@@ -487,13 +488,13 @@ namespace EpicLoot
                                 {
                                     foreach(string bosskey in itemDetails.RequiredBosses)
                                     {
-                                        foreach (BountyBossConfig bossEntry in AdventureDataManager.Config.Bounties.Bosses)
+                                        foreach (string biomeName in BiomeDataManager.GetBiomesInOrder())
                                         {
-                                            if (bossEntry.BossDefeatedKey != bosskey)
+                                            if (BiomeDataManager.GetBossDefeatedKey(biomeName) != bosskey)
                                             {
                                                 continue;
                                             }
-                                            biomes.Add(bossEntry.Biome);
+                                            biomes.Add(BiomeDataManager.GetBiomeEnum(biomeName));
                                         }
                                     }
                                 }
@@ -504,9 +505,9 @@ namespace EpicLoot
                                     biomes.Add(biome);
                                 }
 
-                            // Get the biome name - use AdventureDataManager for modded biomes, fallback to ToString() for vanilla
+                            // Get the biome name from BiomeDataManager
                             Heightmap.Biome selectedBiomeEnum = biomes.First();
-                            string selectBiome = AdventureDataManager.GetBiomeName(selectedBiomeEnum) ?? selectedBiomeEnum.ToString();
+                            string selectBiome = BiomeDataManager.GetBiomeName(selectedBiomeEnum);
                                 GameObject prefab = ObjectDB.instance.GetItemPrefab($"{selectBiome}_{rarity}_Unidentified");
                                 if (prefab == null)
                                 {
